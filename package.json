@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "egg-view-ejs": "^2.0.0",
+    "egg-view-vue": "^1.0.0"
+  }
+}
