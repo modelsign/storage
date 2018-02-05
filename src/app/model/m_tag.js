@@ -6,13 +6,19 @@ module.exports = app => {
       .define(
           'tag',
           {
-            tagid  : { type: BIGINT(), unique: true },
+            tagid  : { type: STRING(255), unique: true },
             title  : STRING(255),
             describ: STRING(255),
             creator: BIGINT()
           },
           {
-            freezeTableName: true
+            freezeTableName: true,
+            indexes        : [
+              {
+                unique: false,
+                fields: ['creator', 'title']
+              }
+            ]
           }
       );
   return MTag;

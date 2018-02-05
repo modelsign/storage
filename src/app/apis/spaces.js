@@ -13,7 +13,7 @@ module.exports = {
         .findAll(
             {
               where  : { spaceid },
-              include: [{ model: MObjsrc }]
+              include: MObjsrc
             }
         );
     this.data   = objects || [];

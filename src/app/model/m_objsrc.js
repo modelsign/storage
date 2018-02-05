@@ -1,13 +1,12 @@
 module.exports = app => {
-  const { STRING, BIGINT} = app.Sequelize;
+  const { STRING, BIGINT,UUID} = app.Sequelize;
   
   const MObjsrc = app
       .model
       .define(
           'objsrc',
           {
-            objsrcid: { type: BIGINT(255), unique: true },
-            name    : STRING(255),
+            objsrcid: { type:STRING(255), unique: true },
             source  : STRING(2048)
           },
           {

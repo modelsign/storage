@@ -1,12 +1,12 @@
 module.exports = app => {
-  const { BIGINT } = app.Sequelize;
+  const { BIGINT, STRING } = app.Sequelize;
   
   const RObjsrcTag = app
       .model
       .define(
           'r_objsrc_tag',
           {
-            creator: BIGINT()
+            creator: STRING(255)
           },
           {
             freezeTableName: true

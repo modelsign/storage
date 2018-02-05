@@ -6,13 +6,19 @@ module.exports = app => {
       .define(
           'space',
           {
-            spaceid: { type: BIGINT(), unique: true },
+            spaceid: { type: STRING(255), unique: true },
             name   : STRING(255),
-            creator: BIGINT(),
-            owner  : BIGINT()
+            creator: STRING(255),
+            owner  : STRING(255)
           },
           {
-            freezeTableName: true
+            freezeTableName: true,
+            indexes        : [
+              {
+                unique: false,
+                fields: ['creator', 'owner', 'name']
+              }
+            ]
           }
       );
   return MSpace;

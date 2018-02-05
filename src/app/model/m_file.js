@@ -1,11 +1,11 @@
 module.exports = app => {
-  const { STRING, BIGINT } = app.Sequelize;
+  const { STRING, BIGINT,UUID } = app.Sequelize;
   
   const MFile = app
       .model
       .define(
           'upload', {
-            fileid : BIGINT(),
+            fileid : STRING(255),
             creator: STRING(255),
             path   : STRING(2048),
             url    : STRING(2048),
