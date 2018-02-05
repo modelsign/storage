@@ -9,11 +9,11 @@ module.exports = {
         { Sequelize }                     = app,
         { MSpace, MObjsrc, RSpaceObjsrc } = app.model;
     
-    let objects = await MSpace
+    let objects = await RSpaceObjsrc
         .findAll(
             {
               where  : { spaceid },
-              include: MObjsrc
+              include: [MObjsrc, MSpace]
             }
         );
     this.data   = objects || [];

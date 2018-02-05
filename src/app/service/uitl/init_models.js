@@ -12,6 +12,7 @@ module.exports = app => {
   
   (
       async () => {
+        
         /** ************************************************************
          *
          *                          重置模型关联
@@ -50,11 +51,11 @@ module.exports = app => {
         /** ******************************
          *  关系       空间-用户
          *********************************/
-        MSpace.belongsTo(MUser, {
+        await MSpace.belongsTo(MUser, {
           foreignKey: 'creator',
           targetKey : 'userid'
         });
-        MSpace.belongsTo(MUser, {
+        await MSpace.belongsTo(MUser, {
           foreignKey: 'owner',
           targetKey : 'userid'
         });
@@ -63,7 +64,7 @@ module.exports = app => {
         /** ******************************
          *  关系       模型-用户
          *********************************/
-        MObjsrc.belongsTo(MUser, {
+        await MObjsrc.belongsTo(MUser, {
           foreignKey: 'creator',
           targetKey : 'userid'
         });
@@ -72,31 +73,43 @@ module.exports = app => {
         /** ******************************
          *  关系       模型-空间
          *********************************/
-        MSpace.belongsToMany(MObjsrc, {
-          through   : RSpaceObjsrc,
-          foreignKey: 'spaceid',
-          otherKey  : 'objsrcid'
-        });
-        MObjsrc.belongsToMany(MSpace, {
-          through   : RSpaceObjsrc,
+        RSpaceObjsrc.belongsTo(MObjsrc, {
           foreignKey: 'objsrcid',
-          otherKey  : 'spaceid'
+          targetKey : 'objsrcid'
         });
-        
+        RSpaceObjsrc.belongsTo(MSpace, {
+          foreignKey: 'spaceid',
+          targetKey : 'spaceid'
+        });
+        MSpace.hasMany(RSpaceObjsrc, {
+          foreignKey: 'spaceid',
+          source    : 'spaceid'
+        });
+        MObjsrc.hasMany(RSpaceObjsrc, {
+          foreignKey: 'objsrcid',
+          source    : 'objsrcid'
+        });
+        await RSpaceObjsrc.sync({ force: true });
         /** ******************************
          *  关系       模型-标签
          *********************************/
-        MTag.belongsToMany(MObjsrc, {
-          through   : RObjsrcTag,
-          foreignKey: 'tagid',
-          otherKey  : 'objsrcid'
-        });
-        MObjsrc.belongsToMany(MTag, {
-          through   : RObjsrcTag,
+        RObjsrcTag.belongsTo(MObjsrc, {
           foreignKey: 'objsrcid',
-          otherKey  : 'tagid'
+          targetKey : 'objsrcid'
         });
-        
+        RObjsrcTag.belongsTo(MTag, {
+          foreignKey: 'tagid',
+          targetKey : 'tagid'
+        });
+        MTag.hasMany(RObjsrcTag, {
+          foreignKey: 'tagid',
+          source    : 'tagid'
+        });
+        MObjsrc.hasMany(RObjsrcTag, {
+          foreignKey: 'objsrcid',
+          source    : 'objsrcid'
+        });
+        await RObjsrcTag.sync({ force: true });
         /** ************************************************************
          *
          *                          模拟一批数据
@@ -108,10 +121,12 @@ module.exports = app => {
          *  每个用户上传1~5个模型
          *
          *********************************/
-        let countUser  = 2;
-        let bulkSpace  = [],
-            bulkUser   = [],
-            bulkObjsrc = [];
+        let countUser        = 2;
+        let bulkSpace        = [],
+            bulkUser         = [],
+            bulkObjsrc       = [],
+            bultRSpaceObjsrc = [];
+        
         while ( countUser >= 0 ) {
           // 用户数据
           let unidUser = await tool.createUniquid('u', 5);
@@ -153,6 +168,25 @@ module.exports = app => {
             countObjsrc--;
           }
           
+          // 空间-模型数据
+          bulkSpace.forEach(
+              ({ spaceid }) => {
+                let countObjsrc = Math
+                    .floor(Math.random() * bulkObjsrc.length);
+                
+                while ( countObjsrc ) {
+                  bultRSpaceObjsrc.push(
+                      {
+                        spaceid,
+                        objsrcid: bulkObjsrc[countObjsrc].objsrcid
+                      }
+                  );
+                  
+                  countObjsrc--;
+                }
+              }
+          );
+          
           countUser--;
         }
         
@@ -162,6 +196,7 @@ module.exports = app => {
         await MUser.bulkCreate(bulkUser);
         await MSpace.bulkCreate(bulkSpace);
         await MObjsrc.bulkCreate(bulkObjsrc);
+        await RSpaceObjsrc.bulkCreate(bultRSpaceObjsrc);
       }
   )();
   

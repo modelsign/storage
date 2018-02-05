@@ -7,14 +7,14 @@ module.exports = app => {
           'space',
           {
             spaceid: { type: STRING(255), unique: true },
-            name   : STRING(255)
+            name   : STRING(255),
           },
           {
             freezeTableName: true,
             indexes        : [
               {
                 unique: false,
-                fields: ['name']
+                fields: [ 'name']
               }
             ]
           }
