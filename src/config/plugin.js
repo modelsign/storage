@@ -9,7 +9,7 @@ exports.sequelize = {
 };
 
 exports.validate = {
-  package: 'egg-validate',
+  package: 'egg-validate'
 };
 
 exports.rest = {
@@ -18,6 +18,16 @@ exports.rest = {
 };
 
 exports.ejs = {
-  enable: true,
-  package: 'egg-view-ejs',
+  enable : true,
+  package: 'egg-view-ejs'
+};
+
+exports.oss = {
+  enable : true,
+  package: 'egg-oss'
+};
+
+exports.job = {
+  enable : true,
+  package: 'egg-job'
 };

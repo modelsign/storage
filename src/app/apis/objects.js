@@ -7,24 +7,14 @@ module.exports = {
     let { app }     = this,
         { MObjsrc } = app.model;
     
-    let objects = await MObjsrc.findAll();
-    this.meta   = {
-      total: objects.length
+    let count_models = await MObjsrc.count();
+    
+    this.meta = {
+      'count_models': count_models,
+      'count_users' : 0,
+      'max_ref'     : 0,
+      'avg_ref'     : 0
     };
-    this.data   = objects.map((object) => {
-      return {
-        type      : 'objects',
-        id        : object.objsrcid,
-        attributes: {
-          name  : object.name,
-          source: object.source
-        },
-        links     : {
-          self: `//${this.request.header.host}/objects/${object.objsrcid}`
-        }
-        
-      };
-    });
   },
   
   async show (next) {

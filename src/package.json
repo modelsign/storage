@@ -5,13 +5,18 @@
   "private": true,
   "dependencies": {
     "egg": "^2.0.0",
+    "egg-job": "^1.1.0",
     "egg-mysql": "^3.0.0",
+    "egg-oss": "^1.1.0",
     "egg-rest": "^2.0.0",
     "egg-scripts": "^2.1.0",
     "egg-sequelize": "^3.1.0",
     "egg-validate": "^1.0.0",
     "egg-view-ejs": "^2.0.0",
-    "mysql2": "^1.5.1"
+    "eustia-module": "^0.8.0",
+    "ioredis": "^3.2.2",
+    "mysql2": "^1.5.1",
+    "stream-wormhole": "^1.0.3"
   },
   "devDependencies": {
     "autod": "^3.0.1",

@@ -1,0 +1,193 @@
+# ************************************************************
+# Sequel Pro SQL dump
+# Version 4541
+#
+# http://www.sequelpro.com/
+# https://github.com/sequelpro/sequelpro
+#
+# Host: o.atech.ltd (MySQL 5.7.19)
+# Database: msign
+# Generation Time: 2018-02-02 07:21:35 +0000
+# ************************************************************
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+# Dump of table counter
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `counter`;
+
+CREATE TABLE `counter` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `key` varchar(255) NOT NULL,
+  `value` int(11) DEFAULT NULL,
+  `min` int(11) DEFAULT NULL,
+  `max` int(11) DEFAULT NULL,
+  `note` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  FULLTEXT KEY `key` (`key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `counter` WRITE;
+/*!40000 ALTER TABLE `counter` DISABLE KEYS */;
+
+INSERT INTO `counter` (`id`, `key`, `value`, `min`, `max`, `note`)
+VALUES
+	(1,'user_u0001_count_space',0,0,0,'用户 u0001 所拥有的空间数量, 该条计数器没有上限'),
+	(2,'user_u0002_count_space',3,0,5,'用户 u0001 所拥有的空间数量, 该条计数器的计数上限是5');
+
+/*!40000 ALTER TABLE `counter` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table object_source
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `object_source`;
+
+CREATE TABLE `object_source` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `objsrcid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `name` varchar(255) DEFAULT NULL,
+  `source` varchar(2048) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `objsource_id` (`objsrcid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `object_source` WRITE;
+/*!40000 ALTER TABLE `object_source` DISABLE KEYS */;
+
+INSERT INTO `object_source` (`id`, `objsrcid`, `name`, `source`)
+VALUES
+	(1,25328442970996736,'模型0','//oss.cdn.msign.tech/xxx.xx0.gltf'),
+	(2,25328442970996737,'模型1','//oss.cdn.msign.tech/xxx.xx1.gltf'),
+	(3,25328442970996738,'模型2','//oss.cdn.msign.tech/xxx.xx2.gltf'),
+	(4,25328442970996739,'模型3','//oss.cdn.msign.tech/xxx.xx3.gltf'),
+	(5,25328442970996740,'模型4','//oss.cdn.msign.tech/xxx.xx4.gltf'),
+	(6,25328442970996741,'模型5','//oss.cdn.msign.tech/xxx.xx5.gltf'),
+	(7,25328442970996742,'模型6','//oss.cdn.msign.tech/xxx.xx6.gltf'),
+	(8,25328442970996743,'模型7','//oss.cdn.msign.tech/xxx.xx7.gltf');
+
+/*!40000 ALTER TABLE `object_source` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table object_tag
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `object_tag`;
+
+CREATE TABLE `object_tag` (
+  `id` bigint(11) unsigned NOT NULL AUTO_INCREMENT,
+  `tagid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `title` varchar(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `tagid` (`tagid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+LOCK TABLES `object_tag` WRITE;
+/*!40000 ALTER TABLE `object_tag` DISABLE KEYS */;
+
+INSERT INTO `object_tag` (`id`, `tagid`, `title`)
+VALUES
+	(1,25328442970996749,'办公用品'),
+	(2,25328442970996750,'生活用品'),
+	(3,25328442970996751,'装饰'),
+	(4,25328442970996752,'工具'),
+	(5,25328442970996753,'电子产品'),
+	(6,25328442970996754,'电脑'),
+	(7,25328442970996755,'手机'),
+	(8,25328442970996756,'瓶子'),
+	(9,25328442970996757,'交通工具'),
+	(10,25328442970996758,'花');
+
+/*!40000 ALTER TABLE `object_tag` ENABLE KEYS */;
+UNLOCK TABLES;
+
+
+# Dump of table r_objsrc_objtag
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `r_objsrc_objtag`;
+
+CREATE TABLE `r_objsrc_objtag` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `objsrctid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `objtagid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  PRIMARY KEY (`id`),
+  KEY `objsrctid` (`objsrctid`),
+  KEY `objtagid` (`objtagid`),
+  CONSTRAINT `r_objsrc_objtag_ibfk_1` FOREIGN KEY (`objsrctid`) REFERENCES `object_source` (`objsrcid`),
+  CONSTRAINT `r_objsrc_objtag_ibfk_2` FOREIGN KEY (`objtagid`) REFERENCES `object_tag` (`tagid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table r_space_objsrc
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `r_space_objsrc`;
+
+CREATE TABLE `r_space_objsrc` (
+  `spaceid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `objsrctid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `location` point DEFAULT NULL,
+  `height` float DEFAULT NULL,
+  KEY `spaceid` (`spaceid`),
+  KEY `objectid` (`objsrctid`),
+  CONSTRAINT `r_space_objsrc_ibfk_1` FOREIGN KEY (`spaceid`) REFERENCES `space` (`spaceid`),
+  CONSTRAINT `r_space_objsrc_ibfk_2` FOREIGN KEY (`objsrctid`) REFERENCES `object_source` (`objsrcid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table space
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `space`;
+
+CREATE TABLE `space` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `spaceid` bigint(20) unsigned NOT NULL COMMENT 'uuid',
+  `name` varchar(255) DEFAULT NULL,
+  `creator` varchar(255) DEFAULT NULL,
+  `owner` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `creator` (`creator`),
+  KEY `owner` (`owner`),
+  KEY `space_id` (`spaceid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+# Dump of table user
+# ------------------------------------------------------------
+
+DROP TABLE IF EXISTS `user`;
+
+CREATE TABLE `user` (
+  `id` bigint(20) unsigned NOT NULL,
+  `username` varchar(255) DEFAULT NULL,
+  `passhash` varchar(255) DEFAULT NULL,
+  `cellphone` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

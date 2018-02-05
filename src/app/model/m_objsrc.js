@@ -1,21 +1,18 @@
 module.exports = app => {
-  const { STRING, INTEGER, DATE } = app.Sequelize;
+  const { STRING, BIGINT} = app.Sequelize;
   
-  const Objsrc = app.model.define('object_source', {
-    objsrcid: STRING(255),
-    name    : STRING(255),
-    source  : STRING(2048)
-  },{
-    freezeTableName:true
-  });
-  //
-  // User.findByLogin = function* (login) {
-  //   return yield this.findOne({ login: login });
-  // }
-  //
-  // User.prototype.logSignin = function* () {
-  //   yield this.update({ last_sign_in_at: new Date() });
-  // }
-  //
-  return Objsrc;
+  const MObjsrc = app
+      .model
+      .define(
+          'objsrc',
+          {
+            objsrcid: { type: BIGINT(255), unique: true },
+            name    : STRING(255),
+            source  : STRING(2048)
+          },
+          {
+            freezeTableName: true
+          }
+      );
+  return MObjsrc;
 };
